@@ -33,7 +33,7 @@ Each image is a 4D tensor (one channel dimension and three spatial dimensions). 
 
 | 2D projection of dapi channel | 2D projection of FISH channel |
 | ------------- | ------------- |
-| ![](images/dapi_2D_crop.png) | ![](images/fish_2D_crop.png) |
+| ![](images/dapi_2d_crop.png "Dapi channel") | ![](images/fish_2d_crop.png "FISH channel") |
 
 If you have any question relative to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
 
