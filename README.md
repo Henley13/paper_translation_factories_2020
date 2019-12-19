@@ -33,7 +33,7 @@ Each image is a 4D tensor (one channel dimension and three spatial dimensions). 
 
 | 2D projection of dapi channel | 2D projection of FISH channel |
 | ------------- | ------------- |
-| ![](images/dapi_2D_all.png) | ![](images/fish_2D_all.png) |
+| ![](images/dapi_2D_crop.png) | ![](images/fish_2D_crop.png) |
 
 If you have any question relative to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
 
@@ -101,7 +101,6 @@ The pipeline is made up of three different resources:
 
 ![](images/tsne_annotation_legend.png "t-SNE of annotated cells")
 
-![](images/boxplot_rf.png "Out-of-bag accuracy for the different classifiers")
 
 ![](images/heatmap.png "Proportion of cell classified with a localization pattern")
 
