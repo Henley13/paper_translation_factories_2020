@@ -4,7 +4,7 @@ TODO
 - [] add bigfish v0
 - [] add nucleAIzer
 - [] add final notebook
-- [] add 2019_racha code and scripts
+- [x] add 2019_racha code and scripts
 - [] complete README.md
 
 
@@ -12,7 +12,8 @@ TODO
 
 This repository gathers the code used to explore and analyze a large part of the images from the following paper: 
 
-__Paper:__ A localization screen reveals translation factories and widespread co-translational protein targeting  
+__Title:__ A localization screen reveals translation factories and widespread co-translational protein targeting  
+
 __Authors:__ Racha Chouaib<sup>1,2,3,11,+</sup>, Adham Safieddine<sup>1,2,3,+</sup>, Xavier Pichon<sup>1,2,+</sup>, Arthur Imbert<sup>4,5,6,+</sup>, Oh Sung Kwon<sup>7</sup>, Aubin Samacoits<sup>8,9</sup>, Abdel-Meneem Traboulsi<sup>1,2</sup>, Marie-Cécile Robert<sup>1,2</sup>, Nikolay Tsanov<sup>1,2</sup>, Emeline Coleno<sup>1,2</sup>, Ina Poser<sup>10</sup>, Christophe Zimmer<sup>8,9</sup>, Anthony Hyman<sup>10</sup>, Hervé Le Hir<sup>7</sup>, Kazem Zibara<sup>3,11</sup>, Marion Peter<sup>1,2</sup>, [Florian Mueller](mailto:muellerf.research@gmail.com)<sup>8,9,* </sup>, [Thomas Walter](mailto:thomas.walter@mines-paristech.fr)<sup>4,5,6,* </sup>, [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)<sup>1,2,*</sup>
 
 ><sup>1</sup>Institut de Génétique Moléculaire de Montpellier, University of Montpellier, CNRS, Montpellier, France  
