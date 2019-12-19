@@ -43,7 +43,7 @@ Each image is a 4D tensor (one channel dimension and three spatial dimensions). 
 
 | 2D projection of dapi channel | 2D projection of FISH channel |
 | ------------- | ------------- |
-| ![](images/dapi_2d_crop.png "Dapi channel") | ![](images/fish_2d_crop.png "FISH channel") |
+| ![](images/dapi_2d_all.png "Dapi channel") | ![](images/fish_2d_all.png "FISH channel") |
 
 If you have any question relative to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
 
@@ -65,8 +65,6 @@ import bigfish.stack as stack
 
 # nuc : np.ndarray, np.uint
 #   3-d dapi image with shape (z, y, x).
-# cyt : np.ndarray, np.uint
-#   3-d FISH image with shape (z, y, x).
 
 # focus projection and enhanced contrast for the dapi channel
 nuc_focus = stack.focus_projection_fast(
@@ -76,17 +74,19 @@ nuc_focus = stack.focus_projection_fast(
 nuc_focus = stack.rescale(
     tensor=nuc_focus, 
     channel_to_stretch=0)
-    
+```
+
+![](images/dapi_2d_crop.png "zoomed in 2D focus projection of dapi channel")
+
+```python
+# cyt : np.ndarray, np.uint
+#   3-d FISH image with shape (z, y, x).
+
 # focus projection for FISH channel
 cyt_focus = stack.focus_projection_fast(
     tensor=cyt,
     proportion=0.75,
     neighborhood_size=7)
-```
-
-```python
-# cyt : np.ndarray, np.uint
-#   3-d FISH image with shape (z, y, x).
 
 # maximum intensity projection for FISH channel
 cyt_in_focus = stack.in_focus_selection(
@@ -95,6 +95,8 @@ cyt_in_focus = stack.in_focus_selection(
     neighborhood_size=30)
 cyt_mip = stack.maximum_projection(cyt_in_focus)
 ```
+
+![](images/fish_2d_crop.png "zoomed in 2D maximum intensity projection of FISH channel")
 
 
 ### 2. Filtering
@@ -343,7 +345,7 @@ results = stack.extract_coordinates_image(
     foci=foci_cleaned)
 
 for i_cell, results_cell in enumerate(results):
-    cyt_coord, nuc_coord, rna_coord, foci_coord, frame = results_cell
+    cyt_coord, nuc_coord, rna_coord, foci_coord, _ = results_cell
 ```
 
 ![](images/plot_random.png "Cell coordinates")
