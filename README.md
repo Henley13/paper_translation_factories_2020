@@ -456,6 +456,10 @@ The Ipython notebook _general/results.ipynb_ gather codes to:
 - compute 2D visualization of the entire dataset
 - aggregate results at the gene-level
 
+At the beginning of the notebook, you need to fill in:
+- `output_directory`, the absolute path of the folder where _merged_annotated.csv_ is located.
+- `plot_directory`, the absolute path of a folder to save the plots.
+
 ## Results
 
 ![](images/tsne_annotation_legend.png "t-SNE of annotated cells")
