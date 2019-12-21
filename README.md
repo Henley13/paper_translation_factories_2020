@@ -400,6 +400,8 @@ for i_cell, results_cell in enumerate(results):
 
 ![](images/plot_random.png "Cell coordinates")
 
+NB: If the coordinates of the cell and the nucleus are in 2D (yx), those of  the mRNA molecules are in 3D (zyx). 
+
 ### 7. Hand-crafted features
 
 We compute spatial features at the cell-level (`features_cell`) from coordinates `cyt_coord`, `nuc_coord` and `rna_coord`:
@@ -458,7 +460,7 @@ The Ipython notebook _general/results.ipynb_ gather codes to:
 
 At the beginning of the notebook, you need to fill in:
 - `output_directory`, the absolute path of the folder where _merged_annotated.csv_ is located.
-- `plot_directory`, the absolute path of a folder to save the plots.
+- `plot_directory`, the absolute path of a folder where you want to save the plots.
 
 ## Results
 
