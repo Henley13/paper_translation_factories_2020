@@ -4,9 +4,5 @@
 # nucleAIzer
 nucleAIzer/Mask_RCNN/__pycache__*
 nucleAIzer/Mask_RCNN/.idea/
-nucleAIzer/biomagdsb/.idea/
 nucleAIzer/biomagdsb/FinalModel/__pycache__*
-nucleAIzer/biomagdsb/kaggle_workflow/outputs/images/*
-nucleAIzer/biomagdsb/kaggle_workflow/outputs/presegment/*
-nucleAIzer/biomagdsb/testImages/*
-nucleAIzer/biomagdsb/kaggle_workflow/maskrcnn/model/*.h5
+nucleAIzer/biomagdsb/.idea/
