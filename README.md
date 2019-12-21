@@ -1,13 +1,3 @@
-
-TODO
-
-- [x] add bigfish v0
-- [x] add nucleAIzer
-- [] add final notebook
-- [x] add 2019_racha code and scripts
-- [] complete README.md
-
-
 # Method, plots and results from Chouaib et al. (2020)
 
 This repository gathers the code used to explore and analyze a large part of the images from the following paper: 
@@ -78,6 +68,12 @@ If you have any question relative to the image analysis, please contact [Florian
 
 ### 1. Projections
 
+We project our 4D image in several 2D projections, one per channel, along the z-axis:
+- `nuc_focus` from `nuc`
+- `cyt_focus` and `cyt_mip` from `cyt`
+
+These projections are mainly used for the segmentation tasks.
+
 ```python
 import bigfish.stack as stack
 
@@ -118,6 +114,10 @@ cyt_mip = stack.maximum_projection(cyt_in_focus)
 
 
 ### 2. Filtering
+
+We apply two filters on the FISH channel `cyt` in order to prepare the spots detection:
+- a laplacian of gaussian filter to enhance the signal-to-noise ratio of the spots and denoise the image (`cyt_filtered_log`).
+- a large gaussian filter to estimate the background noise we then remove from the original image (`cyt_filtered_background`).
 
 ```python
 import bigfish.stack as stack
@@ -175,7 +175,7 @@ To segment nuclei with our version of NucleAIzer:
 
 #### Two-round segmentation
 
-For most of our images, the nuclei segmentation from NucleAIzer is enough. For the most difficult images (where NucleAIzer misses some nuclei), a second pass helps. We use BigFISH to remove the segmented nuclei from the image before applying a second time NucleAIzer.
+For most of our images, the nuclei segmentation from NucleAIzer is enough. For the most difficult images (where NucleAIzer misses some nuclei), a second pass helps. We use BigFISH to remove the segmented nuclei from the image (`unsegmented_nuclei`) before applying a second time NucleAIzer.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -191,7 +191,7 @@ unsegmented_nuclei = segmentation.remove_segmented_nuc(
     mask=nuc_mask)
 ```
 
-Finally you can properly merge the two masks.
+Finally you can properly merge the two masks `nuc_mask_1`  and `nuc_mask_2`.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -207,6 +207,8 @@ nuc_mask = segmentation.dilate_erode_labels(label=nuc_mask)
 ```
 
 ### 4. Cell segmentation
+
+Based on the 2D projection of the FISH channel `cyt_focus`  and the results of the nuclei segmentation `nuc_mask`, we apply a watershed algorithm to segment cells in `cyt_mask`. A `threshold` is required to discriminate the average pixel intensity of the cell from the background.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -242,8 +244,12 @@ cyt_mask = segmentation.cyt_watershed(
 
 ![](images/cyt_segmentation.png "Cell segmentation")
 
-
 ### 5. mRNAs detection
+
+To properly detect the mRNA molecules, three steps are necessary:
+- a local maximum detection algorithm to detect individual and isolated spots (`spots`). The initial detection is based on the filtered image `cyt_filtered_log`.
+- a gaussian fitting algorithm to estimate the right number of mRNA molecules in the bright and dense areas and decompose them (`spots_out_cluster` and `spots_in_cluster`). The detection of so-called dense areas is based on the filtered image `cyt_filtered_background` with a connected-component labeling algorithm. 
+- a clustering algorithm to gather spots close from each others (`clustered_spots`) and define them as foci (`foci`).
 
 #### Spot detection
 
@@ -327,6 +333,7 @@ foci = detection.extract_foci(clustered_spots=clustered_spots)
 
 ### 6. Postprocessing and cell extraction
 
+The foci detected inside the nuclei (and the mRNA molecules that make them) are defined as transcription sites and filtered out (`spots_in_foci_cleaned` and`foci_cleaned`).
 ```python
 import bigfish.stack as stack
 
@@ -357,6 +364,7 @@ spots_in_foci_cleaned, foci_cleaned = stack.remove_transcription_site(
     foci=foci)
 ```
 
+Once we have nuclei, cells and mRNAs coordinates from an image, we can extract the coordinates relatives to each individual cell (`cyt_coord`, `nuc_coord`, `rna_coord` and `foci_coord`). We only keep cells with more than 30 detected mRNA molecules. 
 
 ```python
 import bigfish.stack as stack
@@ -394,6 +402,16 @@ for i_cell, results_cell in enumerate(results):
 
 ### 7. Hand-crafted features
 
+We compute spatial features at the cell-level (`features_cell`) from coordinates `cyt_coord`, `nuc_coord` and `rna_coord`:
+- average mRNAs distance from cytoplasmic membrane
+- average mRNAs distance from nuclear membrane
+- average foci distance from cytoplasmic membrane
+- average foci distance from cytoplasmic membrane
+- number of foci
+- proportion of mRNAs in foci
+- proportion of mRNAs in specific cell regions
+- dispersion index
+
 ```python
 import bigfish.classification as classification
 
@@ -420,21 +438,28 @@ features_cell = classification.get_features(
 
 ### 8. Localization patterns
 
+Beyond a statistical description of the cells, we define classification problems to explore specific localization patterns within our dataset. We manually annotated 810 cells among 5 classes (one per localization pattern). They are used to train 5 different binary classifiers to discriminate each one of these patterns.
+
 | Foci | Intranuclear | Nuclear | Perinuclear | Protrusion |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | ![](images/plot_foci.png "Cell with foci pattern") | ![](images/plot_intranuclear.png "Cell with intranuclear pattern") |  ![](images/plot_nuclear.png "Cell with nuclear pattern") | ![](images/plot_perinuclear.png "Cell with perinuclear pattern") | ![](images/plot_protrusion.png "Cell with protrusion pattern") |
 
+Results from cells extraction, features computation and manual annotations are stored in the _general/merged_annotated.csv_ file.
+
 ### 9. Visualization and results
 
+The Ipython notebook _general/results.ipynb_ gather codes to:
+- format and filter _general/merged_annotated.csv_
+- plot descriptive statistics
+- train binary classifiers
+- compute hypothesis tests
+- compute 2D visualization of the entire dataset
+- aggregate results at the gene-level
 
 ## Results
 
 ![](images/tsne_annotation_legend.png "t-SNE of annotated cells")
 
-
 ![](images/heatmap.png "Proportion of cell classified with a localization pattern")
-
-
-## References
 
 
