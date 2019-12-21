@@ -2,7 +2,6 @@ absl-py==0.7.0
 appnope==0.1.0
 astor==0.7.1
 backcall==0.1.0
--e git+git@github.com:Henley13/big-fish.git@cf9c153f7d8c903ce0cadd0467aeced33c8b9c46#egg=big_fish
 certifi==2018.11.29
 cloudpickle==0.7.0
 cycler==0.10.0

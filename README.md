@@ -1,7 +1,7 @@
 
 TODO
 
-- [] add bigfish v0
+- [x] add bigfish v0
 - [x] add nucleAIzer
 - [] add final notebook
 - [x] add 2019_racha code and scripts
@@ -48,12 +48,29 @@ Each image is a 4D tensor (one channel dimension and three spatial dimensions). 
 
 If you have any question relative to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
 
-## Pipeline
+## Prerequisites
 
 The pipeline is made up of three different resources:
-- **BigFISH**, a python library to manipulate FISH images, apply segmentation and detection algorithms, then compute spatial features at the cell-level. Except for nuclei segmentation and final results computation, the full pipeline is based on BigFISH. As the library is not public yet, the actual code used for this paper is directly integrated in this repository.
-- [**NucleAIzer**](http://nucleaizer.org/), an online tool for nuclei segmentation. We actually scale it using a modified version of their open-sourced code.
-- A more general environment with classic data science libraries to train classification models, perform statistical tests and plot results. 
+- **BigFISH**, a python library to manipulate FISH images, apply segmentation and detection algorithms, then compute spatial features at the cell-level. Except for nuclei segmentation and final results computation, the full pipeline is based on BigFISH. As the library is not public yet, the actual code used for this paper is directly integrated in this repository. 
+    - Run the command `pip install -r requirements_bigfish.txt` in an empty virtual environment to reproduce our python environment and run BigFISH methods.
+- [**NucleAIzer**](http://nucleaizer.org/), an online tool for nuclei segmentation. We actually scale it using a modified version of their open-sourced code. 
+    - Run the command `pip install -r requirements_nucleAIzer.txt` in an empty virtual environment to reproduce our python environment and run nucleAIzer model.
+- A more general environment with classic data science libraries to train classification models, perform statistical tests and plot results. We use it as a kernel for the final Ipython notebook _results.ipynb_.
+    - Run the command `pip install -r requirements_general.txt` in an empty virtual environment to reproduce our python environment and run the _results.ipynb_ notebook.
+
+## Pipeline
+
+The different steps of our pipeline and the relative environments to use:
+
+1. **Project dapi and FISH channels in 2D** (BigFISH)
+2. **Filter FISH channel** (BigFISH)
+3. **Segment nuclei** (NucleAIzer)
+4. **Segment cells** (BigFISH)
+5. **Detect mRNAs spots** (BigFISH)
+6. **Extract individual cells** (BigFISH)
+7. **Compute spatial features** (BigFISH)
+8. **Train classification models** (general)
+9. **Compute and visualize results** (general)
 
 ![](images/pipeline.png "Pipeline")
 
@@ -150,7 +167,7 @@ To segment nuclei with our version of NucleAIzer:
 
 3. Copy the 2D dapi projections in the folder _nucleAIzer/biomagdsb/testImages_.
 
-4. Run the command `start_prediction_fast.sh`.
+4. Run the command `bash nucleAIzer/biomagdsbstart_prediction_fast.sh`.
 
 5. Get the masks in the folder _nucleAIzer/biomagdsb/kaggle_workflow/outputs/presegment_.
 
