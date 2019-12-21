@@ -2,7 +2,7 @@
 TODO
 
 - [] add bigfish v0
-- [] add nucleAIzer
+- [x] add nucleAIzer
 - [] add final notebook
 - [x] add 2019_racha code and scripts
 - [] complete README.md
@@ -51,13 +51,13 @@ If you have any question relative to the image acquisition, please contact [Edou
 ## Pipeline
 
 The pipeline is made up of three different resources:
-- **BigFISH**, a python library to manipulate FISH images, apply segmentation and detection algorithms, then compute spatial features at the cell-level. Except for nuclei segmentation and final results computation, the full pipeline is based on BigFISH. As the library is not public yet, the actual version used for this paper is directly integrated in this repository.
+- **BigFISH**, a python library to manipulate FISH images, apply segmentation and detection algorithms, then compute spatial features at the cell-level. Except for nuclei segmentation and final results computation, the full pipeline is based on BigFISH. As the library is not public yet, the actual code used for this paper is directly integrated in this repository.
 - [**NucleAIzer**](http://nucleaizer.org/), an online tool for nuclei segmentation. We actually scale it using a modified version of their open-sourced code.
 - A more general environment with classic data science libraries to train classification models, perform statistical tests and plot results. 
 
 ![](images/pipeline.png "Pipeline")
 
-If you have any question relative to the image analysis, please contact [Florian Mueller](mailto:muellerf.research@gmail.com) or [Thomas Walter](mailto:thomas.walter@mines-paristech.fr).
+If you have any question relative to the image analysis, please contact [Florian Mueller](mailto:muellerf.research@gmail.com) or [Thomas Walter](mailto:thomas.walter@mines-paristech.fr) (or open an issue).
 
 ### 1. Projections
 
@@ -132,11 +132,33 @@ cyt_filtered_background = stack.remove_background_gaussian(
 
 ### 3. Nuclei segmentation
 
-![](images/nuc_segmentation.png "Nuclei segmentation")
+We identify and segment nuclei from the 2D focus projection of the dapi channel. We use a lighter and modified version of [**NucleAIzer**](http://nucleaizer.org/). From their [source code](https://github.com/spreka/biomagdsb) we only keep:
+- their final segmentation scripts based on Matterport's Mask R-CNN [implementation](https://github.com/matterport/Mask_RCNN).
+- their final trained [weights](https://drive.google.com/drive/folders/1lVJtS41vzMkIsCa3-i14mSmLBbaKazsq).
+
+In particular, we remove the Matlab dependencies and the U-net parts. 
 
 #### NucleAIzer
 
+To segment nuclei with our version of NucleAIzer:
+
+1. Reproduce our python environment:
+    - If you use conda, you can recreate our conda environment with the command `conda env create -f environment_nucleAIzer.yml`. 
+    - Otherwise, you can reproduce it manually from the _requirements_nucleAIzer.txt_ file, running the command `pip install -r requirements.txt` in an empty virtual environment.
+
+2. Download the trained weights from the [google drive](https://drive.google.com/drive/folders/1lVJtS41vzMkIsCa3-i14mSmLBbaKazsq) of the authors. Make sure to copy the _mask_rcnn_final.h5_ file in the folder _nucleAIzer/biomagdsb/kaggle_workflow/maskrcnn/model_.
+
+3. Copy the 2D dapi projections in the folder _nucleAIzer/biomagdsb/testImages_.
+
+4. Run the command `start_prediction_fast.sh`.
+
+5. Get the masks in the folder _nucleAIzer/biomagdsb/kaggle_workflow/outputs/presegment_.
+
+![](images/nuc_segmentation.png "Nuclei segmentation")
+
 #### Two-round segmentation
+
+For most of our images, the nuclei segmentation from NucleAIzer is enough. For the most difficult images (where NucleAIzer misses some nuclei), a second pass helps. We use BigFISH to remove the segmented nuclei from the image before applying a second time NucleAIzer.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -151,6 +173,8 @@ unsegmented_nuclei = segmentation.remove_segmented_nuc(
     image=nuc_focus,
     mask=nuc_mask)
 ```
+
+Finally you can properly merge the two masks.
 
 ```python
 import bigfish.segmentation as segmentation
