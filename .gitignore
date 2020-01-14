@@ -1,0 +1,11 @@
+.idea/
+.DS_Store
+
+# nucleAIzer
+nucleAIzer/Mask_RCNN/__pycache__*
+nucleAIzer/Mask_RCNN/.idea/
+nucleAIzer/biomagdsb/FinalModel/__pycache__*
+nucleAIzer/biomagdsb/.idea/
+
+# general
+general/.ipynb_checkpoints
