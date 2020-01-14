@@ -27,9 +27,9 @@ This paper provides qualitative and quantitative evidence on the single-cell lev
 
 The entire dataset consists of 527 images for 32 different genes. For each image,
 3 channels were acquired:
-- DAPI: label nuclei.
-- smFISH (Cy3): visualize individual mRNA molecules of the genes of interest.
-- GFP: visualize the encoded protein.
+- DAPI - label nuclei.
+- smFISH (Cy3) - visualize individual mRNA molecules of the genes of interest.
+- GFP - visualize the encoded protein.
 
 Each image is stored as a 4D tensor (first dimension for the different channels, next three dimension for the 3 spatial dimensions).
 
@@ -77,10 +77,10 @@ If you have any question relative to the image analysis, please contact [Florian
 
 ### 1. Projections
 Nuclei and cell segmentation is performed on 2D images. To obtain these images,
-we project the 3D images stored in the 4D tensor with an approach based on focus-Projections
+we project the 3D images stored in the 4D tensor with an approach based on focus projection
 as detailed [in our paper](https://academic.oup.com/nar/article/44/22/e165/2691336):
 
-#### Projection of DAPI image**
+#### Projection of DAPI image
 Resulting image is named `nuc_focus`.
 
 ```python
@@ -102,7 +102,7 @@ nuc_focus = stack.rescale(
 ![](images/dapi_2d_crop.png "zoomed in 2D focus projection of dapi channel")
 
 
-#### Projection of smFISH image**
+#### Projection of smFISH image
 Resulting image is named `cyt_focus`.
 
 ```python
@@ -176,9 +176,7 @@ of our data.
 
 To segment nuclei with our version of NucleAIzer:
 
-1. Reproduce our python environment:
-    - If you use conda, you can recreate our conda environment with the command `conda env create -f environment_nucleAIzer.yml`.
-    - Otherwise, you can reproduce it manually from the _requirements_nucleAIzer.txt_ file, running the command `pip install -r requirements.txt` in an empty virtual environment.
+1. Reproduce our python environment (running the command `pip install -r requirements_nucleAIzer.txt` in an empty virtual environment).
 
 2. Download the trained weights from the [google drive](https://drive.google.com/drive/folders/1lVJtS41vzMkIsCa3-i14mSmLBbaKazsq) of the authors. Make sure to copy the _mask_rcnn_final.h5_ file in the folder _nucleAIzer/biomagdsb/kaggle_workflow/maskrcnn/model_.
 
