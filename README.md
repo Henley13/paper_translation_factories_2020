@@ -1,59 +1,68 @@
-# Method, plots and results from Chouaib et al. (2020)
+# Methods, plots and results from Chouaib et al. (2020)
 
-This repository gathers the code used to explore and analyze a large part of the images from the following paper: 
+This repository gathers the code used to explore and analyze a large part of the images from the following paper:
 
-__Title:__ A localization screen reveals translation factories and widespread co-translational protein targeting  
+__Title:__ A localization screen reveals translation factories and widespread co-translational protein targeting
 
 __Authors:__ Racha Chouaib<sup>1,2,3,11,+</sup>, Adham Safieddine<sup>1,2,3,+</sup>, Xavier Pichon<sup>1,2,+</sup>, Arthur Imbert<sup>4,5,6,+</sup>, Oh Sung Kwon<sup>7</sup>, Aubin Samacoits<sup>8,9</sup>, Abdel-Meneem Traboulsi<sup>1,2</sup>, Marie-Cécile Robert<sup>1,2</sup>, Nikolay Tsanov<sup>1,2</sup>, Emeline Coleno<sup>1,2</sup>, Ina Poser<sup>10</sup>, Christophe Zimmer<sup>8,9</sup>, Anthony Hyman<sup>10</sup>, Hervé Le Hir<sup>7</sup>, Kazem Zibara<sup>3,11</sup>, Marion Peter<sup>1,2</sup>, [Florian Mueller](mailto:muellerf.research@gmail.com)<sup>8,9,* </sup>, [Thomas Walter](mailto:thomas.walter@mines-paristech.fr)<sup>4,5,6,* </sup>, [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)<sup>1,2,*</sup>
 
-><sup>1</sup>Institut de Génétique Moléculaire de Montpellier, University of Montpellier, CNRS, Montpellier, France  
-<sup>2</sup>Equipe labélisée Ligue Nationale Contre le Cancer, University of Montpellier, CNRS, Montpellier, France  
-<sup>3</sup>ER045, PRASE, DSST, Lebanese University, Beirut, Lebanon  
-<sup>4</sup>MINES ParisTech, PSL-Research University, CBIO-Centre for Computational Biology, 77300 Fontainebleau, France  
-<sup>5</sup>Institut Curie, 75248 Paris Cedex, France  
-<sup>6</sup>INSERM, U900, 75248 Paris Cedex, France  
-<sup>7</sup>Institut de biologie de l'Ecole normale supérieure (IBENS), Ecole normale supérieure, CNRS, INSERM, PSL Research University, 46 rue d'Ulm, 75005, Paris, France  
-<sup>8</sup>Unité Imagerie et Modélisation, Institut Pasteur and CNRS UMR 3691, 28 rue du Docteur Roux, 75015 Paris; France  
-<sup>9</sup>C3BI, USR 3756 IP CNRS – Paris, France  
-<sup>10</sup>MPI-CBG, Pfotenhauer Str. 108, 01307 Dresden, Germany  
-<sup>11</sup>Biology Department, Faculty of Sciences-I, Lebanese University, Beirut, Lebanon  
+><sup>1</sup>Institut de Génétique Moléculaire de Montpellier, University of Montpellier, CNRS, Montpellier, France
+<sup>2</sup>Equipe labélisée Ligue Nationale Contre le Cancer, University of Montpellier, CNRS, Montpellier, France
+<sup>3</sup>ER045, PRASE, DSST, Lebanese University, Beirut, Lebanon
+<sup>4</sup>MINES ParisTech, PSL-Research University, CBIO-Centre for Computational Biology, 77300 Fontainebleau, France
+<sup>5</sup>Institut Curie, 75248 Paris Cedex, France
+<sup>6</sup>INSERM, U900, 75248 Paris Cedex, France
+<sup>7</sup>Institut de biologie de l'Ecole normale supérieure (IBENS), Ecole normale supérieure, CNRS, INSERM, PSL Research University, 46 rue d'Ulm, 75005, Paris, France
+<sup>8</sup>Unité Imagerie et Modélisation, Institut Pasteur and CNRS UMR 3691, 28 rue du Docteur Roux, 75015 Paris; France
+<sup>9</sup>C3BI, USR 3756 IP CNRS – Paris, France
+<sup>10</sup>MPI-CBG, Pfotenhauer Str. 108, 01307 Dresden, Germany
+<sup>11</sup>Biology Department, Faculty of Sciences-I, Lebanese University, Beirut, Lebanon
 >
-><sup>+</sup>Equal contributions  
+><sup>+</sup>Equal contributions
 <sup>*</sup>To whom correspondence should be addressed.
 
-This paper provides cell-level qualitative and quantitative evidence about the non-random localization of several mRNAs within the cytoplasm. More specifically it emphasizes the **co-localization of several mRNAs with relative proteins** and the fact that **some mRNAs are translated in factories**.
+This paper provides qualitative and quantitative evidence on the single-cell level about the non-random mRNA localization of in the cytoplasm. More specifically it emphasizes the **co-localization of several mRNAs with their encoded proteins** and the fact that **some mRNAs are translated in dedicated factories**.
 
 ## Data
 
-Our entire dataset consists in 527 images. Three different channels were used:
-- Dapi channel to label nuclei.
-- FISH channel to spot mRNA molecules of a targeted gene.
-- GFP channel to spot related proteins.
+The entire dataset consists of 527 images for 32 different genes. For each image,
+3 channels were acquired:
+- DAPI: label nuclei.
+- smFISH (Cy3): visualize individual mRNA molecules of the genes of interest.
+- GFP: visualize the encoded protein.
 
-Each image is a 4D tensor (one channel dimension and three spatial dimensions). The following pipeline mainly exploits dapi and FISH channel, although some measures and observations required the GFP channel. Ultimately, we identified 9710 cells within these images for 32 different genes. 
+Each image is stored as a 4D tensor (first dimension for the different channels, next three dimension for the 3 spatial dimensions).
+
+Ultimately, we identified 9710 cells within these images.
 
 | 2D projection of dapi channel | 2D projection of FISH channel |
 | ------------- | ------------- |
 | ![](images/dapi_2d_all.png "Dapi channel") | ![](images/fish_2d_all.png "FISH channel") |
 
-If you have any question relative to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
+If you have any question related to the image acquisition, please contact [Edouard Bertrand](mailto:edouard.bertrand@igmm.cnrs.fr)
 
 ## Prerequisites
 
-The pipeline is made up of three different resources:
-- **BigFISH**, a python library to manipulate FISH images, apply segmentation and detection algorithms, then compute spatial features at the cell-level. Except for nuclei segmentation and final results computation, the full pipeline is based on BigFISH. As the library is not public yet, the actual code used for this paper is directly integrated in this repository. 
+The analysis pipeline consists of three different resources that are best run
+in dedicated virtual environments:
+- **BigFISH**, a python library to process smFISH images (available in this
+  repository). It allows to perform segmentation of cells and nuclei, detect mRNA
+  molecules in 3D, and lastly compute spatial features at the cell-level.
     - Run the command `pip install -r requirements_bigfish.txt` in an empty virtual environment to reproduce our python environment and run BigFISH methods.
-- [**NucleAIzer**](http://nucleaizer.org/), an online tool for nuclei segmentation. We actually scale it using a modified version of their open-sourced code. 
+- [**NucleAIzer**](http://nucleaizer.org/), a Deep Learning based approach for nuclei segmentation. We modified
+   the published open-source code to adjust it to our specific needs .
     - Run the command `pip install -r requirements_nucleAIzer.txt` in an empty virtual environment to reproduce our python environment and run nucleAIzer model.
 - A more general environment with classic data science libraries to train classification models, perform statistical tests and plot results. We use it as a kernel for the final Ipython notebook _results.ipynb_.
     - Run the command `pip install -r requirements_general.txt` in an empty virtual environment to reproduce our python environment and run the _results.ipynb_ notebook.
 
 ## Pipeline
 
-The different steps of our pipeline and the relative environments to use:
+Below, we provide a quick overview of the different steps in the analysis, and
+in which environment they are performed. A more detailed description of each
+step is provided in the following sections:
 
-1. **Project dapi and FISH channels in 2D** (BigFISH)
-2. **Filter FISH channel** (BigFISH)
+1. **Project 3D DAPI and FISH channels to 2D** (BigFISH)
+2. **Filter FISH images** (BigFISH)
 3. **Segment nuclei** (NucleAIzer)
 4. **Segment cells** (BigFISH)
 5. **Detect mRNAs spots** (BigFISH)
@@ -67,12 +76,12 @@ The different steps of our pipeline and the relative environments to use:
 If you have any question relative to the image analysis, please contact [Florian Mueller](mailto:muellerf.research@gmail.com) or [Thomas Walter](mailto:thomas.walter@mines-paristech.fr) (or open an issue).
 
 ### 1. Projections
+Nuclei and cell segmentation is performed on 2D images. To obtain these images,
+we project the 3D images stored in the 4D tensor with an approach based on focus-Projections
+as detailed [in our paper](https://academic.oup.com/nar/article/44/22/e165/2691336):
 
-We project our 4D image in several 2D projections, one per channel, along the z-axis:
-- `nuc_focus` from `nuc`
-- `cyt_focus` and `cyt_mip` from `cyt`
-
-These projections are mainly used for the segmentation tasks.
+#### Projection of DAPI image**
+Resulting image is named `nuc_focus`.
 
 ```python
 import bigfish.stack as stack
@@ -86,11 +95,15 @@ nuc_focus = stack.focus_projection_fast(
     proportion=0.7,
     neighborhood_size=7)
 nuc_focus = stack.rescale(
-    tensor=nuc_focus, 
+    tensor=nuc_focus,
     channel_to_stretch=0)
 ```
 
 ![](images/dapi_2d_crop.png "zoomed in 2D focus projection of dapi channel")
+
+
+#### Projection of smFISH image**
+Resulting image is named `cyt_focus`.
 
 ```python
 # cyt : np.ndarray, np.uint
@@ -115,9 +128,9 @@ cyt_mip = stack.maximum_projection(cyt_in_focus)
 
 ### 2. Filtering
 
-We apply two filters on the FISH channel `cyt` in order to prepare the spots detection:
-- a laplacian of gaussian filter to enhance the signal-to-noise ratio of the spots and denoise the image (`cyt_filtered_log`).
-- a large gaussian filter to estimate the background noise we then remove from the original image (`cyt_filtered_background`).
+We apply two filters on the FISH channel `cyt` to facilitate the spot detection:
+- a Laplacian of Gaussian filter to enhance the signal-to-noise ratio of the spots and denoise the image (`cyt_filtered_log`).
+- a large Gaussian filter to estimate the background noise we then remove from the original image (`cyt_filtered_background`).
 
 ```python
 import bigfish.stack as stack
@@ -130,42 +143,46 @@ import bigfish.detection as detection
 sigma_z, sigma_yx = detection.get_sigma(
     resolution_z=300,
     resolution_yx=103,
-    psf_z=350, 
+    psf_z=350,
     psf_yx=150)
 sigma_log = (sigma_z, sigma_yx, sigma_yx)
 sigma_background = (sigma_z*5, sigma_yx*5, sigma_yx*5)
 
 # LoG filter
 cyt_filtered_log = stack.log_filter(
-    image=cyt, 
-    sigma=sigma_log, 
+    image=cyt,
+    sigma=sigma_log,
     keep_dtype=True)
 
 # large gaussian filter to estimate then remove noisy background
 cyt_filtered_background = stack.remove_background_gaussian(
-    image=cyt, 
+    image=cyt,
     sigma=sigma_background)
 ```
 
 ### 3. Nuclei segmentation
 
-We identify and segment nuclei from the 2D focus projection of the dapi channel. We use a lighter and modified version of [**NucleAIzer**](http://nucleaizer.org/). From their [source code](https://github.com/spreka/biomagdsb) we only keep:
+We identify and segment nuclei from the 2D focus projection of the DAPI channel.
+For this, we use modified and light-weight version of [**NucleAIzer**](http://nucleaizer.org/).
+From the original [source code](https://github.com/spreka/biomagdsb) we kept:
 - their final segmentation scripts based on Matterport's Mask R-CNN [implementation](https://github.com/matterport/Mask_RCNN).
 - their final trained [weights](https://drive.google.com/drive/folders/1lVJtS41vzMkIsCa3-i14mSmLBbaKazsq).
 
-In particular, we remove the Matlab dependencies and the U-net parts. 
+In particular, we removed the Matlab dependencies and the post-processin steps with
+several U-nets. We found that these steps didn't not improve the segmentation quality
+of our data.
 
 #### NucleAIzer
 
 To segment nuclei with our version of NucleAIzer:
 
 1. Reproduce our python environment:
-    - If you use conda, you can recreate our conda environment with the command `conda env create -f environment_nucleAIzer.yml`. 
+    - If you use conda, you can recreate our conda environment with the command `conda env create -f environment_nucleAIzer.yml`.
     - Otherwise, you can reproduce it manually from the _requirements_nucleAIzer.txt_ file, running the command `pip install -r requirements.txt` in an empty virtual environment.
 
 2. Download the trained weights from the [google drive](https://drive.google.com/drive/folders/1lVJtS41vzMkIsCa3-i14mSmLBbaKazsq) of the authors. Make sure to copy the _mask_rcnn_final.h5_ file in the folder _nucleAIzer/biomagdsb/kaggle_workflow/maskrcnn/model_.
 
-3. Copy the 2D dapi projections in the folder _nucleAIzer/biomagdsb/testImages_.
+3. Copy the 2D DAPI projections in the folder _nucleAIzer/biomagdsb/testImages_.
 
 4. Run the command `bash nucleAIzer/biomagdsbstart_prediction_fast.sh`.
 
@@ -175,7 +192,7 @@ To segment nuclei with our version of NucleAIzer:
 
 #### Two-round segmentation
 
-For most of our images, the nuclei segmentation from NucleAIzer is enough. For the most difficult images (where NucleAIzer misses some nuclei), a second pass helps. We use BigFISH to remove the segmented nuclei from the image (`unsegmented_nuclei`) before applying a second time NucleAIzer.
+For most of our images, the nuclei segmentation from NucleAIzer works well. For some challenging images, where NucleAIzer misses some nuclei, a second pass helps. We use BigFISH to remove the segmented nuclei from the image (`unsegmented_nuclei`) before applying NucleAIzer a second time.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -191,7 +208,7 @@ unsegmented_nuclei = segmentation.remove_segmented_nuc(
     mask=nuc_mask)
 ```
 
-Finally you can properly merge the two masks `nuc_mask_1`  and `nuc_mask_2`.
+Finally, you can properly merge the two masks `nuc_mask_1`  and `nuc_mask_2`.
 
 ```python
 import bigfish.segmentation as segmentation
@@ -208,17 +225,17 @@ nuc_mask = segmentation.dilate_erode_labels(label=nuc_mask)
 
 ### 4. Cell segmentation
 
-Based on the 2D projection of the FISH channel `cyt_focus`  and the results of the nuclei segmentation `nuc_mask`, we apply a watershed algorithm to segment cells in `cyt_mask`. A `threshold` is required to discriminate the average pixel intensity of the cell from the background.
+Based on the 2D projection of the FISH channel `cyt_focus` and the results of the nuclei segmentation `nuc_mask`, we apply a watershed algorithm to segment cells in `cyt_mask`. A `threshold` is required to discriminate the average pixel intensity of the cell from the background.
 
 ```python
 import bigfish.segmentation as segmentation
 
-# cyt_focus : np.ndarray, np.uint 
+# cyt_focus : np.ndarray, np.uint
 #   2-d projection of FISH image with shape (y, x).
 # threshold : int
-#   Intensity pixel threshold to discriminate foreground (cells) from 
+#   Intensity pixel threshold to discriminate foreground (cells) from
 #   background
-# nuc_mask : np.ndarray 
+# nuc_mask : np.ndarray
 #   Result of the nuclei segmentation with shape (y, x).
 
 # compute binary mask
@@ -246,17 +263,17 @@ cyt_mask = segmentation.cyt_watershed(
 
 ### 5. mRNAs detection
 
-To properly detect the mRNA molecules, three steps are necessary:
-- a local maximum detection algorithm to detect individual and isolated spots (`spots`). The initial detection is based on the filtered image `cyt_filtered_log`.
-- a gaussian fitting algorithm to estimate the right number of mRNA molecules in the bright and dense areas and decompose them (`spots_out_cluster` and `spots_in_cluster`). The detection of so-called dense areas is based on the filtered image `cyt_filtered_background` with a connected-component labeling algorithm. 
-- a clustering algorithm to gather spots close from each others (`clustered_spots`) and define them as foci (`foci`).
+To accurately detect the individual mRNA molecules in 3D, three steps are necessary:
+1. Local maximum detection to detect individual and isolated spots (`spots`). The initial detection is based on the filtered image `cyt_filtered_log`.
+0. A modified Gaussian Mixture Model to estimate the  number of mRNA molecules in the bright and dense areas and decompose them (`spots_out_cluster` and `spots_in_cluster`). The detection of these dense areas is based on the filtered image `cyt_filtered_background` with a connected-component labeling algorithm.
+0. Clustering algorithm to gather spots in close proximity (`clustered_spots`) and define them as foci (`foci`).
 
 #### Spot detection
 
 ```python
 import bigfish.detection as detection
 
-# cyt_filtered_log : np.ndarray, np.uint 
+# cyt_filtered_log : np.ndarray, np.uint
 #   LoG filtered image with shape (z, y, x) or (y, x).
 # threshold : int
 #   Minimum threshold of a spot in the LoG filtered image to be kept.
@@ -265,7 +282,7 @@ import bigfish.detection as detection
 sigma_z, sigma_yx = detection.get_sigma(
     resolution_z=300,
     resolution_yx=103,
-    psf_z=350, 
+    psf_z=350,
     psf_yx=150)
 sigma = (sigma_z, sigma_yx, sigma_yx)
 
@@ -280,6 +297,8 @@ spots, radius, _ = detection.spots_thresholding(
     threshold=threshold)
 ```
 
+Detected spots are shown as red circles in the right image. Note that even brighter spots are only detected once, even if they likely contain multiple RNAs. The next steps allows to decompose these brighter spots.
+
 ![](images/spot_detection.png "Spot detection")
 
 #### Cluster decomposition
@@ -289,7 +308,7 @@ import bigfish.detection as detection
 import numpy as np
 
 # cyt_filtered_background : np.ndarray
-#   Image with shape (z, y, x) and filter with a large gaussian operator to 
+#   Image with shape (z, y, x) and filter with a large gaussian operator to
 #   estimate then remove background.
 # spots : np.ndarray, np.int64
 #   Coordinates of the detected spots with shape (nb_spots, 3).
@@ -298,8 +317,8 @@ import numpy as np
 
 # cluster decomposition
 (spots_out_cluster, spots_in_cluster, _, _) = detection.run_decomposition(
-    image=cyt_no_background, 
-    spots=spots, 
+    image=cyt_no_background,
+    spots=spots,
     radius=radius,
     min_area=2,
     resolution_z=300,
@@ -308,6 +327,8 @@ import numpy as np
     psf_yx=150)
 spots = np.concatenate((spots_out_cluster, spots_in_cluster[:, :3]), axis=0)
 ```
+
+Please note that multiples spots are now placed in the brighter area.
 
 ![](images/cluster_decomposition.png "Decomposition of dense mRNAs clusters")
 
@@ -329,22 +350,28 @@ clustered_spots = detection.cluster_spots(
 foci = detection.extract_foci(clustered_spots=clustered_spots)
 ```
 
+Foci are detected with DBscan, where points are grouped together that are closer than
+350nm. Further, to be considered a foci has to have at least 5 mRNAs. Detected foci
+are shown as blue circles.
+
 ![](images/foci_detection.png "Foci detection")
 
 ### 6. Postprocessing and cell extraction
 
-The foci detected inside the nuclei (and the mRNA molecules that make them) are defined as transcription sites and filtered out (`spots_in_foci_cleaned` and`foci_cleaned`).
+Foci detected inside the nuclei (and their mRNAs) are defined
+as transcription sites and filtered out (`spots_in_foci_cleaned` and `foci_cleaned`).
+
 ```python
 import bigfish.stack as stack
 
 # nuc_mask : np.ndarray
 #   Results of the nuclei segmentation, with shape (y, x).
 # clustered_spots : np.ndarray, np.int64
-#   Coordinates of the detected spots with shape (nb_spots, 4). The last 
+#   Coordinates of the detected spots with shape (nb_spots, 4). The last
 #   column is the cluster assigned to the spot. If no cluster was assigned,
 #   value is -1.
 # foci : np.ndarray, np.int64
-#   Array with shape (nb_foci, 5). One coordinate per dimension for the 
+#   Array with shape (nb_foci, 5). One coordinate per dimension for the
 #   foci centroid (zyx coordinates), the number of spots detected in the
 #   foci and its index.
 
@@ -364,7 +391,9 @@ spots_in_foci_cleaned, foci_cleaned = stack.remove_transcription_site(
     foci=foci)
 ```
 
-Once we have nuclei, cells and mRNAs coordinates from an image, we can extract the coordinates relatives to each individual cell (`cyt_coord`, `nuc_coord`, `rna_coord` and `foci_coord`). We only keep cells with more than 30 detected mRNA molecules. 
+Once we have the nuclei, cells and mRNAs/foci coordinates from an image (`cyt_coord`, `nuc_coord`, `rna_coord` and `foci_coord`), we can assign each mRNA/foci to a cell.
+
+We only keep cells with more than 30 detected mRNA molecules.
 
 ```python
 import bigfish.stack as stack
@@ -374,15 +403,15 @@ import bigfish.stack as stack
 # cyt_mask : np.ndarray
 #   Results of the cell segmentation, with shape (y, x).
 # spots_out_foci : np.ndarray, np.int64
-#   Coordinate of the spots detected outside foci, with shape (nb_spots, 4). 
-#   One coordinate per dimension (zyx coordinates) plus a default index 
+#   Coordinate of the spots detected outside foci, with shape (nb_spots, 4).
+#   One coordinate per dimension (zyx coordinates) plus a default index
 #   (-1 for mRNAs spotted outside a foci).
 # spots_in_foci_cleaned : np.ndarray, np.int64
-#    Coordinate of the spots detected inside foci, with shape (nb_spots, 4). 
+#    Coordinate of the spots detected inside foci, with shape (nb_spots, 4).
 #    One coordinate per dimension (zyx coordinates) plus the index of the
 #    foci. Spots from the transcription sites are removed.
 # foci_cleaned : np.ndarray, np.int64
-#   Array with shape (nb_foci, 5). One coordinate per dimension for the 
+#   Array with shape (nb_foci, 5). One coordinate per dimension for the
 #   foci centroid (zyx coordinates), the number of spots detected in the
 #   foci and its index. Transcription sites free.
 
@@ -400,7 +429,7 @@ for i_cell, results_cell in enumerate(results):
 
 ![](images/plot_random.png "Cell coordinates")
 
-NB: If the coordinates of the cell and the nucleus are in 2D (yx), those of  the mRNA molecules are in 3D (zyx). 
+NB: If the coordinates of the cell and the nucleus are in 2D (yx), those of  the mRNA molecules are in 3D (zyx).
 
 ### 7. Hand-crafted features
 
@@ -418,13 +447,13 @@ We compute spatial features at the cell-level (`features_cell`) from coordinates
 import bigfish.classification as classification
 
 # cyt_coord : np.ndarray, np.int64
-#   Coordinates of the cytoplasmic membrane (yx coordinates) with shape 
+#   Coordinates of the cytoplasmic membrane (yx coordinates) with shape
 #   (nb_points, 2).
 # nuc_coord : np.ndarray, np.int64
-#   Coordinates of the nuclear membrane (yx coordinates) with shape 
+#   Coordinates of the nuclear membrane (yx coordinates) with shape
 #   (nb_points, 2).
 # rna_coord : np.ndarray, np.int64
-#   Coordinates of the mRNAs detected inside the cell, with shape (nb_spots, 4). 
+#   Coordinates of the mRNAs detected inside the cell, with shape (nb_spots, 4).
 #   One coordinate per dimension (zyx coordinates) plus the index of the
 #   a potential foci (-1 if the mRNA is spotted outside a foci).
 
@@ -467,5 +496,3 @@ At the beginning of the notebook, you need to fill in:
 ![](images/tsne_annotation_legend.png "t-SNE of annotated cells")
 
 ![](images/heatmap.png "Proportion of cell classified with a localization pattern")
-
-
