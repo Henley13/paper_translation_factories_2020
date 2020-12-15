@@ -1,5 +1,9 @@
 # Methods, plots and results from Chouaib et al. (2020)
 
+[![License](https://img.shields.io/badge/license-BSD%203--Clause-green)](https://github.com/Henley13/paper_translation_factories_2020/blob/master/LICENSE)
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4322701.svg)](https://doi.org/10.5281/zenodo.4322701)
+
 This repository gathers the code used to explore and analyze a large part of the images from the following paper:
 
 __Title:__ A dual protein/mRNA localization screen reveals compartmentalized translation and widespread co-translational RNA targeting
