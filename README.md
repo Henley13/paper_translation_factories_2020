@@ -21,6 +21,8 @@ __Authors:__ Racha Chouaib<sup>1,2,3,11,+</sup>, Adham Safieddine<sup>1,2,3,+</s
 ><sup>+</sup>Equal contributions
 <sup>*</sup>To whom correspondence should be addressed.
 
+__Url:__ https://www.cell.com/developmental-cell/pdf/S1534-5807(20)30584-0.pdf
+
 This paper provides qualitative and quantitative evidence on the single-cell level about the non-random mRNA localization of in the cytoplasm. More specifically it emphasizes the **co-localization of several mRNAs with their encoded proteins** and the fact that **some mRNAs are translated in dedicated factories**.
 
 ## Data
